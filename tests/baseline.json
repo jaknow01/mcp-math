@@ -1,0 +1,91 @@
+{
+  "agent": "math_agent",
+  "tools": [
+    {
+      "name": "calculate_statistics",
+      "description": "calculate_statistics(numbers: list[float]) -> dict\n\nDescription:\n    Computes summary statistics over a list of numbers in one call: count, sum, mean\n    (average), median, minimum, maximum, range (max-min), population and sample standard\n    deviation and variance. Use for \"średnia/suma/min/max/odchylenie z tych wartości\".\n\nParameters:\nctx : Context\n    Context in which the tool operates.\n\nnumbers: list[float]\n    The numbers to summarize (e.g. [3.71, 3.68, 3.74]). Numeric strings are accepted.\n\nOutput:\n    JSON with count, sum, mean, median, min, max, range, stdev_population,\n    stdev_sample (null for n<2) and the matching variances; or an error if empty.",
+      "input_schema": {
+        "properties": {
+          "numbers": {
+            "items": {
+              "type": "number"
+            },
+            "title": "Numbers",
+            "type": "array"
+          }
+        },
+        "required": [
+          "numbers"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "correlation",
+      "description": "correlation(x: list[float], y: list[float]) -> dict\n\nDescription:\n    Computes the Pearson correlation coefficient between two equal-length series\n    (e.g. does gold move with USD/PLN). Use for \"czy X i Y są ze sobą powiązane\".\n\nParameters:\nctx : Context\n    Context in which the tool operates.\n\nx: list[float]\n    First series.\n\ny: list[float]\n    Second series (must be the same length as x, at least 2 points).\n\nOutput:\n    JSON with n and pearson_r (-1..1); or an error if lengths differ or variance is zero.",
+      "input_schema": {
+        "properties": {
+          "x": {
+            "items": {
+              "type": "number"
+            },
+            "title": "X",
+            "type": "array"
+          },
+          "y": {
+            "items": {
+              "type": "number"
+            },
+            "title": "Y",
+            "type": "array"
+          }
+        },
+        "required": [
+          "x",
+          "y"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "linear_trend",
+      "description": "linear_trend(numbers: list[float]) -> dict\n\nDescription:\n    Fits a least-squares straight line to a sequence of numbers taken in order (x = 0,\n    1, 2, …) and reports its slope, intercept, overall direction and the fitted change\n    across the whole sequence. Use to quantify a trend (\"czy X rośnie i jak szybko\").\n\nParameters:\nctx : Context\n    Context in which the tool operates.\n\nnumbers: list[float]\n    The ordered sequence (e.g. daily values, oldest first). Needs at least 2 points.\n\nOutput:\n    JSON with n, slope (change per step), intercept, direction (rising/falling/flat),\n    first, last, total_change (last-first) and fitted_change (slope*(n-1)); or an error.",
+      "input_schema": {
+        "properties": {
+          "numbers": {
+            "items": {
+              "type": "number"
+            },
+            "title": "Numbers",
+            "type": "array"
+          }
+        },
+        "required": [
+          "numbers"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "percentage_change",
+      "description": "percentage_change(old_value: float, new_value: float) -> dict\n\nDescription:\n    Computes the absolute and percentage change from an old value to a new value\n    (e.g. how much a price rose/fell). Use for \"o ile procent zmieniło się X\".\n\nParameters:\nctx : Context\n    Context in which the tool operates.\n\nold_value: float\n    The starting/earlier value.\n\nnew_value: float\n    The ending/later value.\n\nOutput:\n    JSON with absolute_change (new-old), percent_change and direction\n    (up/down/unchanged); percent_change is null if old_value is 0.",
+      "input_schema": {
+        "properties": {
+          "old_value": {
+            "title": "Old Value",
+            "type": "number"
+          },
+          "new_value": {
+            "title": "New Value",
+            "type": "number"
+          }
+        },
+        "required": [
+          "old_value",
+          "new_value"
+        ],
+        "type": "object"
+      }
+    }
+  ]
+}
